@@ -1,6 +1,7 @@
 import * as Carousel from './Carousel.js';
 import axios from 'axios';
 
+const body = document.body;
 // The breed selection input element.
 const breedSelect = document.getElementById('breedSelect');
 // The information section div element.
@@ -19,6 +20,8 @@ axios.defaults.headers.common['x-api-key'] = API_KEY;
 axios.interceptors.request.use((request) => {
   request.metadata = request.metadata || {};
   request.metadata.startTime = new Date().getTime();
+  progressBar.style.width = '0%';
+  body.style.cursor = 'progress';
   return request;
 });
 
@@ -27,6 +30,7 @@ axios.interceptors.response.use(
     response.config.metadata.endTime = new Date().getTime();
     response.durationInMS =
       response.config.metadata.endTime - response.config.metadata.startTime;
+    body.style.cursor = 'default';
     return response;
   },
 
@@ -38,9 +42,18 @@ axios.interceptors.response.use(
   }
 );
 
+function updateProgress(progressEvent) {
+  const percentage = Math.round(
+    (progressEvent.loaded / progressEvent.total) * 100
+  );
+  progressBar.style.width = `${percentage}%`;
+}
+
 async function initialLoad() {
   try {
-    const { data, durationInMS } = await axios.get('/breeds');
+    const { data, durationInMS } = await axios.get('/breeds', {
+      onDownloadProgress: updateProgress,
+    });
     if (!data) {
       throw new Error('No data was returned from the API');
     }
