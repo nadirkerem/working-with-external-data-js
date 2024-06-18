@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', initialLoad);
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
+breedSelect.addEventListener('change', async () => {});
+
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
  */
