@@ -122,3 +122,26 @@ export async function favourite(imgId) {
     console.error(error);
   }
 }
+
+async function getFavourites() {
+  try {
+    const { data, durationInMS } = await axios.get('/favourites');
+    if (!data) {
+      throw new Error('No data was returned from the API');
+    }
+    console.log(`Get favourites request duration: ${durationInMS}ms`);
+    Carousel.clear();
+    data.forEach((favourite) => {
+      const carouselItem = Carousel.createCarouselItem(
+        favourite.image.url,
+        null,
+        favourite.image.id
+      );
+      Carousel.appendCarousel(carouselItem);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+getFavouritesBtn.addEventListener('click', getFavourites);
