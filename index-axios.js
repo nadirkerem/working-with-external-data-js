@@ -82,6 +82,11 @@ async function getBreedInfo() {
         breed_ids: breedId,
       },
     });
+    if (data.length === 0) {
+      infoDump.innerHTML = `<h2>No breed info available</h2>`;
+      Carousel.clear();
+      return;
+    }
     if (!data) {
       throw new Error('No data was returned from the API');
     }
