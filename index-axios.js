@@ -110,5 +110,15 @@ async function getBreedInfo() {
 breedSelect.addEventListener('change', getBreedInfo);
 
 export async function favourite(imgId) {
-  // your code here
+  try {
+    const { data, durationInMS } = await axios.post('/favourites', {
+      image_id: imgId,
+    });
+    if (!data) {
+      throw new Error('No data was returned from the API');
+    }
+    console.log(`Favourite request duration: ${durationInMS}ms`);
+  } catch (error) {
+    console.error(error);
+  }
 }
