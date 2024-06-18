@@ -41,6 +41,8 @@ async function initialLoad() {
   } catch (error) {
     console.error(error);
   }
+
+  getBreedInfo();
 }
 
 document.addEventListener('DOMContentLoaded', initialLoad);
@@ -60,7 +62,38 @@ document.addEventListener('DOMContentLoaded', initialLoad);
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
-breedSelect.addEventListener('change', async () => {});
+async function getBreedInfo() {
+  const breedId = breedSelect.value;
+  const selectedBreed = await fetch(
+    `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${breedId}&api_key=${API_KEY}`
+  );
+  if (!selectedBreed.ok) {
+    throw new Error(
+      'There was a problem with the fetch operation:',
+      selectedBreed.statusText
+    );
+  }
+  const breedData = await selectedBreed.json();
+  console.log(breedData);
+  Carousel.clear();
+  breedData.forEach((breed) => {
+    const carouselItem = Carousel.createCarouselItem(
+      breed.url,
+      breed.breeds[0].name,
+      breed.id
+    );
+    Carousel.appendCarousel(carouselItem);
+    infoDump.innerHTML = `
+      <h2>${breed.breeds[0].name}</h2>
+      <p>${breed.breeds[0].description}</p>
+      <p>Origin: ${breed.breeds[0].origin}</p>
+      <p>Life Span: ${breed.breeds[0].life_span}</p>
+      <p>Temperament: ${breed.breeds[0].temperament}</p>
+    `;
+  });
+}
+
+breedSelect.addEventListener('change', getBreedInfo);
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
