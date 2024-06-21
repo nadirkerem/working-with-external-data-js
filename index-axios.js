@@ -11,7 +11,11 @@ const progressBar = document.getElementById('progressBar');
 // The get favourites button element.
 const getFavouritesBtn = document.getElementById('getFavouritesBtn');
 
-const API_KEY = process.env.API_KEY;
+// const API_KEY = process.env.API_KEY;
+// the correct way to store the API key is to use an environment variable
+// but for this case, I will hardcode the API key
+const API_KEY =
+  'live_y9QwtGKmhFVSXVLGn2VeY6MNh82yDYxRsNjP2wUk80CMrLPdYaOBjJRMCVtkbqbT';
 
 axios.defaults.baseURL = 'https://api.thecatapi.com/v1';
 
